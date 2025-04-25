@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admin Dashboard</h2>
+    <a href="{{ url_for('create_election') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create Election
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ elections|length }}</h1>
+                <h5 class="card-title">Total Elections</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ elections|selectattr('status', 'equalto', 'ongoing')|list|length }}</h1>
+                <h5 class="card-title">Ongoing Elections</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ elections|selectattr('status', 'equalto', 'upcoming')|list|length }}</h1>
+                <h5 class="card-title">Upcoming Elections</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">All Elections</h3>
+<div class="list-group">
+    {% for election in elections %}
+    <a href="{{ url_for('view_election', election_id=election.election_id) }}" 
+       class="list-group-item list-group-item-action {% if election.status == 'completed' %}completed-election{% else %}election-card{% endif %}">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ election.title }}</h5>
+            <small class="text-{% if election.status == 'upcoming' %}info{% elif election.status == 'ongoing' %}success{% else %}muted{% endif %}">
+                {{ election.status|capitalize }}
+            </small>
+        </div>
+        <p class="mb-1">{{ election.description }}</p>
+        <small>
+            {{ election.start_date.strftime('%Y-%m-%d %H:%M') }} to {{ election.end_date.strftime('%Y-%m-%d %H:%M') }}
+        </small>
+    </a>
+    {% else %}
+    <div class="alert alert-info">No elections found.</div>
+    {% endfor %}
+</div>
+{% endblock %}

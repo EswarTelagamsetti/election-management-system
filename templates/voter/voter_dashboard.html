@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Voter Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Voter Dashboard</h2>
+
+<h3 class="mb-3">Current Elections</h3>
+{% if elections %}
+<div class="row">
+    {% for election in elections %}
+    <div class="col-md-6 mb-4">
+        <div class="card {% if election.election_id in voted_election_ids %}border-success{% else %}election-card{% endif %} h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ election.title }}</h5>
+                <p class="card-text">{{ election.description }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        {{ election.start_date.strftime('%Y-%m-%d %H:%M') }} to {{ election.end_date.strftime('%Y-%m-%d %H:%M') }}
+                    </small>
+                </p>
+            </div>
+            <div class="card-footer bg-transparent">
+                {% if election.election_id in voted_election_ids %}
+                <button class="btn btn-success disabled w-100">Already Voted</button>
+                {% else %}
+                <a href="{{ url_for('vote', election_id=election.election_id) }}" class="btn btn-primary w-100">Vote Now</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">No current elections available.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ election.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ election.title }}</h2>
+    <div>
+        <a href="{{ url_for('add_candidate', election_id=election.election_id) }}" class="btn btn-primary me-2">
+            <i class="bi bi-person-plus"></i> Add Candidate
+        </a>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Election Details</h5>
+        <p class="card-text">{{ election.description }}</p>
+        <p class="card-text">
+            <strong>Status:</strong> 
+            <span class="badge bg-{% if election.status == 'upcoming' %}info{% elif election.status == 'ongoing' %}success{% else %}secondary{% endif %}">
+                {{ election.status|capitalize }}
+            </span>
+        </p>
+        <p class="card-text"><strong>Start:</strong> {{ election.start_date.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p class="card-text"><strong>End:</strong> {{ election.end_date.strftime('%Y-%m-%d %H:%M') }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Candidates</h5>
+            </div>
+            <div class="card-body">
+                {% if candidates %}
+                <ul class="list-group">
+                    {% for candidate in candidates %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ candidate.full_name }}
+                        <span class="badge bg-primary rounded-pill">{{ candidate.party_affiliation or 'Independent' }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="alert alert-info">No candidates added yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Vote Results</h5>
+            </div>
+            <div class="card-body">
+                {% if vote_counts %}
+                <ul class="list-group">
+                    {% for vote in vote_counts %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ vote.full_name }}
+                        <span class="badge bg-success rounded-pill">{{ vote.vote_count }} votes</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="alert alert-info">No votes recorded yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Candidate Dashboard</h2>
+
+<h3 class="mb-3">Your Elections</h3>
+{% if elections %}
+<div class="list-group">
+    {% for election in elections %}
+    <div class="list-group-item">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ election.title }}</h5>
+            <small class="text-{% if election.status == 'upcoming' %}info{% elif election.status == 'ongoing' %}success{% else %}muted{% endif %}">
+                {{ election.status|capitalize }}
+            </small>
+        </div>
+        <p class="mb-1">{{ election.description }}</p>
+        <small>
+            {{ election.start_date.strftime('%Y-%m-%d %H:%M') }} to {{ election.end_date.strftime('%Y-%m-%d %H:%M') }}
+        </small>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">You are not currently participating in any elections.</div>
+{% endif %}
+{% endblock %}

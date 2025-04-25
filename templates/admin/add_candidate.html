@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Add Candidate{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">Add Candidate to Election</h2>
+                
+                {% if candidates %}
+                <form method="POST" action="{{ url_for('add_candidate', election_id=election_id) }}">
+                    <div class="mb-3">
+                        <label for="candidate_id" class="form-label">Select Candidate</label>
+                        <select class="form-select" id="candidate_id" name="candidate_id" required>
+                            <option value="">Choose a candidate...</option>
+                            {% for candidate in candidates %}
+                            <option value="{{ candidate.candidate_id }}">{{ candidate.full_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('view_election', election_id=election_id) }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Add Candidate</button>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-info">No available candidates to add. All candidates are already in this election.</div>
+                <a href="{{ url_for('view_election', election_id=election_id) }}" class="btn btn-primary">Back to Election</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

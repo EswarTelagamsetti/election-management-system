@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">Candidate Profile</h2>
+                
+                <form method="POST" action="{{ url_for('candidate_profile') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" value="{{ candidate.full_name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" value="{{ candidate.email }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="party_affiliation" class="form-label">Party Affiliation</label>
+                        <input type="text" class="form-control" id="party_affiliation" name="party_affiliation" 
+                               value="{{ candidate.party_affiliation or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="bio" name="bio" rows="5">{{ candidate.bio or '' }}</textarea>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

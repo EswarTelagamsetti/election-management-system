@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Vote - {{ election.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">Vote in {{ election.title }}</h2>
+                
+                <div class="alert alert-info mb-4">
+                    <p class="mb-0">{{ election.description }}</p>
+                    <p class="mb-0"><strong>Election Period:</strong> {{ election.start_date.strftime('%Y-%m-%d %H:%M') }} to {{ election.end_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                </div>
+                
+                <form method="POST" action="{{ url_for('vote', election_id=election.election_id) }}">
+                    <h4 class="mb-3">Select Your Candidate</h4>
+                    
+                    {% if candidates %}
+                    <div class="list-group mb-4">
+                        {% for candidate in candidates %}
+                        <div class="list-group-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="candidate_id" 
+                                       id="candidate{{ candidate.candidate_id }}" value="{{ candidate.candidate_id }}" required>
+                                <label class="form-check-label" for="candidate{{ candidate.candidate_id }}">
+                                    <strong>{{ candidate.full_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">{{ candidate.party_affiliation or 'Independent' }}</small>
+                                    {% if candidate.bio %}
+                                    <br><small>{{ candidate.bio }}</small>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Submit Vote</button>
+                        <a href="{{ url_for('voter_dashboard') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning">No candidates available for this election.</div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
